@@ -3,12 +3,27 @@
    <head>
      <meta charset="utf-8" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
-     <title>Ire Soleye</title>
-     <meta name="description" content="Personal website of Ire Soleye — Computer Science student. About and Projects." />
-     <meta property="og:title" content="Ire Soleye" />
-     <meta name="github-username" content="lolusoleye" />
-     <meta property="og:description" content="Personal website of a computer science student — About and Projects." />
-     <meta name="theme-color" content="#0f172a" />
+    <title>Ire Soleye</title>
+    <meta name="description" content="Personal website of Ire Soleye — Computer Science student. About and Projects." />
+    <meta name="keywords" content="Ire Soleye, computer science, student, software developer, projects" />
+    <meta name="author" content="Ire Soleye" />
+    <meta name="github-username" content="lolusoleye" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://iresoleye.me/" />
+    <meta property="og:title" content="Ire Soleye" />
+    <meta property="og:description" content="Personal website of Ire Soleye — Computer Science student. About and Projects." />
+    <meta property="og:site_name" content="Ire Soleye" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://iresoleye.me/" />
+    <meta property="twitter:title" content="Ire Soleye" />
+    <meta property="twitter:description" content="Personal website of Ire Soleye — Computer Science student. About and Projects." />
+    
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="canonical" href="https://iresoleye.me/" />
      <link rel="preconnect" href="https://fonts.googleapis.com" />
      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -80,26 +95,29 @@
          return '';
        }
 
-       async function fetchRepos(username) {
-         // Fetch all public repos with pagination
-         const perPage = 100;
-         let page = 1;
-         let all = [];
-         // Cap at 1000 repos for safety
-         while (page < 11) {
-           const endpoint = `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=${perPage}&page=${page}&sort=updated`;
-           const res = await fetch(endpoint, { headers: { 'Accept': 'application/vnd.github+json' } });
-           if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-           const data = await res.json();
-           if (!Array.isArray(data) || data.length === 0) break;
-           all = all.concat(data);
-           if (data.length < perPage) break;
-           page++;
-         }
-         return all
-           .filter(r => !r.fork && !r.archived)
-           .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-       }
+      // Repos to exclude from the Projects section
+      const EXCLUDED_REPOS = new Set(['personal-website']);
+
+      async function fetchRepos(username) {
+        // Fetch all public repos with pagination
+        const perPage = 100;
+        let page = 1;
+        let all = [];
+        // Cap at 1000 repos for safety
+        while (page < 11) {
+          const endpoint = `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=${perPage}&page=${page}&sort=updated`;
+          const res = await fetch(endpoint, { headers: { 'Accept': 'application/vnd.github+json' } });
+          if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+          const data = await res.json();
+          if (!Array.isArray(data) || data.length === 0) break;
+          all = all.concat(data);
+          if (data.length < perPage) break;
+          page++;
+        }
+        return all
+          .filter(r => !r.fork && !r.archived && !EXCLUDED_REPOS.has((r.name || '').toLowerCase()))
+          .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      }
 
        function renderRepos(repos) {
          const grid = document.getElementById('projects-grid');

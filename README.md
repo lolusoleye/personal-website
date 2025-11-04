@@ -38,36 +38,38 @@ This site can automatically list repositories from your GitHub account:
 
 - Or pass it via URL: `index.html?u=YOUR_GITHUB_USERNAME`
 
-The Projects section fetches your public, non-fork, non-archived repos (top 9 by stars) and links to each repo and optional homepage.
+The Projects section fetches all your public, non-fork, non-archived repos and displays them sorted by last updated. The `personal-website` repo is automatically excluded from the list.
 
-## Deploy to GitHub Pages
+## Deployment
 
-1. Create a new GitHub repo (public): e.g. `personal-website`.
-2. Commit all files and push to `main`.
-3. In GitHub → Settings → Pages:
-   - Build and deployment: Source = Deploy from a branch
-   - Branch = `main` / root (`/`)
-4. Wait for Pages to build; your site will be live at `https://<username>.github.io/personal-website/`.
+This site is configured for **Vercel** deployment.
 
-Tip: If you prefer the special Pages repo, name it `<username>.github.io` and deploy from `main`.
+### Quick Deploy to Vercel
 
-## Custom domain (iresoleye.me)
+1. Push your code to GitHub (if not already done)
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+3. Click **Add New Project** → Import your `personal-website` repository
+4. Click **Deploy** (Vercel auto-detects settings)
 
-This repo includes a `CNAME` file with `iresoleye.me`.
+### Connect Custom Domain (iresoleye.me)
 
-In GitHub → Settings → Pages:
-- Custom domain: `iresoleye.me`
-- Enable “Enforce HTTPS” after the certificate is issued.
+1. In Vercel project → **Settings** → **Domains**
+2. Add `iresoleye.me` and `www.iresoleye.me`
+3. Configure DNS in Namecheap:
+   - **A Record** for `@` → `76.76.21.21` (Vercel's IP)
+   - **CNAME Record** for `www` → `cname.vercel-dns.com`
+4. Wait for DNS propagation (5-60 minutes)
 
-In Namecheap DNS (Domain → Advanced DNS):
-- For apex `@` add A records to GitHub Pages IPs:
-  - 185.199.108.153
-  - 185.199.109.153
-  - 185.199.110.153
-  - 185.199.111.153
-- For `www` add a CNAME record pointing to `<username>.github.io`.
+**📖 For detailed step-by-step instructions, see [VERCEL_DEPLOYMENT_GUIDE.md](./VERCEL_DEPLOYMENT_GUIDE.md)**
 
-Propagation can take a bit. Once active, the GitHub Pages URL will redirect to `iresoleye.me`.
+### Make it Visible on Google
+
+1. Submit to [Google Search Console](https://search.google.com/search-console)
+2. Verify domain ownership via DNS (TXT record)
+3. Submit `sitemap.xml` in Search Console
+4. Request indexing for `https://iresoleye.me/`
+
+See the deployment guide for complete instructions.
 
 ## GitHub Student Developer Pack
 
