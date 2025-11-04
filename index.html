@@ -1,0 +1,156 @@
+ <!doctype html>
+ <html lang="en">
+   <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title>Ire Soleye</title>
+     <meta name="description" content="Personal website of Ire Soleye — Computer Science student. About and Projects." />
+     <meta property="og:title" content="Ire Soleye" />
+     <meta name="github-username" content="lolusoleye" />
+     <meta property="og:description" content="Personal website of a computer science student — About and Projects." />
+     <meta name="theme-color" content="#0f172a" />
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+     <link rel="stylesheet" href="styles.css" />
+   </head>
+   <body>
+     <header class="site-header">
+       <div class="container header-inner">
+         <a class="brand" href="#home" aria-label="Ire Soleye home">Ire Soleye</a>
+         <nav class="nav" aria-label="Primary">
+           <a href="#about">About</a>
+           <a href="#projects">Projects</a>
+         </nav>
+       </div>
+     </header>
+
+     <main id="home">
+       <section class="hero">
+         <div class="container">
+           <h1 class="hero-title">Hi, I'm Ire Soleye</h1>
+           <p class="hero-subtitle">Computer Science student — building, learning, and sharing my projects.</p>
+           <div class="hero-cta">
+             <a class="btn primary" href="#projects">View Projects</a>
+             <a class="btn" href="#about">About me</a>
+           </div>
+         </div>
+       </section>
+
+       <section id="about" class="section">
+         <div class="container">
+           <h2>About</h2>
+           <p>
+             I'm a computer science student with interests in algorithms, web development, and
+             practical software engineering. I enjoy turning ideas into usable products and learning
+             by building in public.
+           </p>
+           <p>
+             Lately, I've been focusing on creating clean, accessible user experiences and exploring
+             systems fundamentals that make software reliable at scale.
+           </p>
+         </div>
+       </section>
+
+       <section id="projects" class="section alt">
+         <div class="container">
+           <h2>Projects</h2>
+           <div id="projects-grid" class="projects-grid" aria-live="polite"></div>
+         </div>
+       </section>
+     </main>
+
+     <footer class="site-footer">
+       <div class="container">
+         <p>© <span id="year"></span> iresoleye.me</p>
+       </div>
+     </footer>
+
+     <script>
+       // Update year in footer
+       document.getElementById('year').textContent = new Date().getFullYear();
+
+       // Helper to get GitHub username from URL (?u=...), meta tag, or fallback
+       function resolveGithubUsername() {
+         const url = new URL(window.location.href);
+         const fromQuery = url.searchParams.get('u');
+         if (fromQuery) return fromQuery.trim();
+         const meta = document.querySelector('meta[name="github-username"]');
+         if (meta && meta.content && meta.content.trim().length > 0) return meta.content.trim();
+         return '';
+       }
+
+       async function fetchRepos(username) {
+         // Fetch all public repos with pagination
+         const perPage = 100;
+         let page = 1;
+         let all = [];
+         // Cap at 1000 repos for safety
+         while (page < 11) {
+           const endpoint = `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=${perPage}&page=${page}&sort=updated`;
+           const res = await fetch(endpoint, { headers: { 'Accept': 'application/vnd.github+json' } });
+           if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+           const data = await res.json();
+           if (!Array.isArray(data) || data.length === 0) break;
+           all = all.concat(data);
+           if (data.length < perPage) break;
+           page++;
+         }
+         return all
+           .filter(r => !r.fork && !r.archived)
+           .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+       }
+
+       function renderRepos(repos) {
+         const grid = document.getElementById('projects-grid');
+         if (!grid) return;
+         grid.innerHTML = '';
+         if (!repos || repos.length === 0) {
+           grid.innerHTML = '<p class="muted">No repositories to show yet.</p>';
+           return;
+         }
+         for (const repo of repos) {
+           const article = document.createElement('article');
+           article.className = 'card';
+           article.innerHTML = `
+             <h3 class="card-title">${repo.name}</h3>
+             <p class="card-body">${repo.description ? repo.description : 'No description provided.'}</p>
+             <div class="meta">
+               ${repo.language ? `<span class="badge">${repo.language}</span>` : ''}
+               <span class="badge">★ ${repo.stargazers_count || 0}</span>
+               <span class="badge">Updated ${new Date(repo.updated_at).toLocaleDateString()}</span>
+             </div>
+             <div class="card-actions">
+               <a class="link" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">Repository</a>
+               ${repo.homepage ? `<a class="link" href="${repo.homepage}" target="_blank" rel="noopener noreferrer">Demo</a>` : ''}
+             </div>
+           `;
+           grid.appendChild(article);
+         }
+       }
+
+       (async () => {
+         const username = resolveGithubUsername();
+         if (!username) {
+           // Show a friendly hint if username is not configured
+           const grid = document.getElementById('projects-grid');
+           if (grid) {
+             grid.innerHTML = '<p class="muted">Set your GitHub username via the meta tag or use ?u=YOUR_USERNAME in the URL to load projects.</p>';
+           }
+           return;
+         }
+         try {
+           const repos = await fetchRepos(username);
+           renderRepos(repos);
+         } catch (err) {
+           const grid = document.getElementById('projects-grid');
+           if (grid) {
+             grid.innerHTML = '<p class="muted">Unable to load repositories right now. Please try again later.</p>';
+           }
+           console.error(err);
+         }
+       })();
+     </script>
+   </body>
+ </html>
+
