@@ -10,6 +10,8 @@ interface Repo {
   language: string | null
   stargazers_count: number
   updated_at: string
+  fork: boolean
+  archived: boolean
 }
 
 export default function ProjectsGrid() {
