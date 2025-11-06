@@ -6,14 +6,14 @@ import slugify from 'slugify'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { slug: string } }
 ) {
   const supabase = createClient()
   
   const { data: post, error } = await supabase
     .from('posts')
     .select('*')
-    .eq('id', params.id)
+    .eq('slug', params.slug)
     .single()
 
   if (error) {
@@ -25,7 +25,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { slug: string } }
 ) {
   const session = await auth()
   
@@ -46,10 +46,21 @@ export async function PUT(
   if (content !== undefined) updates.content = content
   if (attachments !== undefined) updates.attachments = attachments
 
+  // First get the post by slug to get its ID
+  const { data: existingPost } = await supabase
+    .from('posts')
+    .select('id')
+    .eq('slug', params.slug)
+    .single()
+
+  if (!existingPost) {
+    return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+  }
+
   const { data: post, error } = await supabase
     .from('posts')
     .update(updates)
-    .eq('id', params.id)
+    .eq('id', existingPost.id)
     .select()
     .single()
 
@@ -65,7 +76,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { slug: string } }
 ) {
   const session = await auth()
   
@@ -78,7 +89,7 @@ export async function DELETE(
   const { error } = await supabase
     .from('posts')
     .delete()
-    .eq('id', params.id)
+    .eq('slug', params.slug)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
