@@ -21,21 +21,10 @@ export default {
         session.user.name = token.login as string
       }
       return session
-    },
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isAdmin = auth?.user?.name === process.env.ADMIN_GITHUB_USERNAME
-      const isAdminPage = nextUrl.pathname.startsWith('/admin')
-      
-      if (isAdminPage) {
-        if (isLoggedIn && isAdmin) return true
-        return false // Redirect unauthenticated users to login page
-      }
-      return true
-    },
+    }
   },
   pages: {
-    signIn: '/admin',
+    signIn: '/api/auth/signin',
   },
 } satisfies NextAuthConfig
 

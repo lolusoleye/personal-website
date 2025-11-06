@@ -8,15 +8,18 @@ export default auth((req) => {
   const isAdmin = req.auth?.user?.name === process.env.ADMIN_GITHUB_USERNAME
   const isAdminPage = nextUrl.pathname.startsWith('/admin')
 
-  if (isAdminPage && (!isLoggedIn || !isAdmin)) {
-    // Allow access to /admin for sign-in, but redirect other admin pages
-    if (nextUrl.pathname !== '/admin') {
-      return NextResponse.redirect(new URL('/admin', nextUrl))
+  if (isAdminPage) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(new URL('/api/auth/signin', nextUrl))
+    }
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL('/', nextUrl))
     }
   }
+  return NextResponse.next()
 })
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/admin/:path*']
 }
 
