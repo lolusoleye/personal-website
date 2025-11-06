@@ -1,6 +1,6 @@
 import { createPublicClient } from '@/lib/supabase/server'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+import Header from '@/app/components/Header'
+import Footer from '@/app/components/Footer'
 import BlogPostClient from './BlogPostClient'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'

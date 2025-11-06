@@ -2,8 +2,8 @@ import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import AdminEditor from './AdminEditor'
 import SignInButton from './SignInButton'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from '@/app/components/Header'
+import Footer from '@/app/components/Footer'
 
 export default async function AdminPage() {
   const session = await auth()
