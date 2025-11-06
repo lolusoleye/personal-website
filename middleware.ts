@@ -1,24 +1,21 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { auth } from '@/auth'
 
-// Simple middleware for logging and basic protection
-export async function middleware(request: NextRequest) {
-  // Log request details
-  console.log('Middleware executing for:', request.nextUrl.pathname)
-  
-  if (request.nextUrl.pathname === '/admin') {
-    // Simple redirect to sign in
-    const signInUrl = new URL('/api/auth/signin', request.url)
-    console.log('Redirecting to:', signInUrl.toString())
-    return NextResponse.redirect(signInUrl)
-  }
-
-  console.log('Proceeding with request')
+export default auth((req) => {
   return NextResponse.next()
-}
+})
 
-// Only run on /admin
 export const config = {
-  matcher: '/admin'
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 }
 
