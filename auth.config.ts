@@ -3,6 +3,7 @@ import GitHub from 'next-auth/providers/github'
 
 export default {
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID!,
