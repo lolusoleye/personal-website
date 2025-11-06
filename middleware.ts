@@ -1,25 +1,24 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { auth } from '@/auth'
 
+// Simple middleware for logging and basic protection
 export async function middleware(request: NextRequest) {
-  const session = await auth()
+  // Log request details
+  console.log('Middleware executing for:', request.nextUrl.pathname)
   
-  // Only protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/api/auth/signin', request.url))
-    }
-    
-    if (session.user?.name !== process.env.ADMIN_GITHUB_USERNAME) {
-      return NextResponse.redirect(new URL('/', request.url))
-    }
+  if (request.nextUrl.pathname === '/admin') {
+    // Simple redirect to sign in
+    const signInUrl = new URL('/api/auth/signin', request.url)
+    console.log('Redirecting to:', signInUrl.toString())
+    return NextResponse.redirect(signInUrl)
   }
-  
+
+  console.log('Proceeding with request')
   return NextResponse.next()
 }
 
+// Only run on /admin
 export const config = {
-  matcher: ['/admin/:path*']
+  matcher: '/admin'
 }
 
