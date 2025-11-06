@@ -1,6 +1,6 @@
 import { createPublicClient } from '@/lib/supabase/server'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import Link from 'next/link'
 
 export const revalidate = 60 // Revalidate every 60 seconds
