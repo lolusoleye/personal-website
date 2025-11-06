@@ -1,6 +1,7 @@
-import { auth, signIn } from '@/auth'
+import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import AdminEditor from './AdminEditor'
+import SignInButton from './SignInButton'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -8,8 +9,15 @@ export default async function AdminPage() {
   const session = await auth()
 
   if (!session || session.user?.name !== process.env.ADMIN_GITHUB_USERNAME) {
-    await signIn('github', { redirectTo: '/admin' })
-    return null
+    return (
+      <>
+        <Header />
+        <main>
+          <SignInButton />
+        </main>
+        <Footer />
+      </>
+    )
   }
 
   return (
