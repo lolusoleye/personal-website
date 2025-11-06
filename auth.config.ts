@@ -2,8 +2,6 @@ import type { NextAuthConfig } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 
 export default {
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID!,
@@ -11,9 +9,8 @@ export default {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account && profile) {
-        token.id = profile.id
+    async jwt({ token, profile }) {
+      if (profile) {
         token.login = profile.login
       }
       return token
@@ -27,26 +24,13 @@ export default {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
       const isAdmin = auth?.user?.name === process.env.ADMIN_GITHUB_USERNAME
+      const isAdminPage = nextUrl.pathname.startsWith('/admin')
       
-      // Allow public access to auth endpoints
-      if (nextUrl.pathname.startsWith('/api/auth')) {
-        return true
-      }
-
-      // Protect admin routes
-      if (nextUrl.pathname.startsWith('/admin')) {
+      if (isAdminPage) {
         return isLoggedIn && isAdmin
       }
 
-      // Protect API routes
-      if (nextUrl.pathname.startsWith('/api/posts') || 
-          nextUrl.pathname.startsWith('/api/upload')) {
-        return isLoggedIn && isAdmin
-      }
-
-      // Allow access to everything else
       return true
     }
-  }
+  },
 } satisfies NextAuthConfig
-
