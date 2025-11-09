@@ -1,6 +1,12 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
+  const pathname = usePathname()
+  const isHome = pathname === '/'
+
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -8,8 +14,8 @@ export default function Header() {
           Ire Soleye
         </Link>
         <nav className="nav" aria-label="Primary">
-          <Link href="#about">About</Link>
-          <Link href="#projects">Projects</Link>
+          <Link href={isHome ? "#about" : "/#about"}>About</Link>
+          <Link href={isHome ? "#projects" : "/#projects"}>Projects</Link>
           <Link href="/blog">Blog</Link>
         </nav>
       </div>
