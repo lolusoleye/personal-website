@@ -35,28 +35,19 @@ export default function Home() {
       </header>
 
       <section className="section" aria-labelledby="work-heading">
-        <h2 id="work-heading">Work</h2>
         <article className="work-item">
-          <h3>Learning Repository</h3>
           <p>
-            A collection of small systems built while learning computer science
-            fundamentals.
+            <a href={LEARNING_REPO}>view my learning repository featuring a collection of mini projects I’ve built.</a>
           </p>
-          <p>
-            <a href={LEARNING_REPO}>GitHub repository</a>
-          </p>
-          <p className="muted small">continuously updated</p>
         </article>
       </section>
 
       <section className="section" aria-labelledby="activity-heading">
-        <h2 id="activity-heading">Activity</h2>
+        <h2 id="activity-heading">GitHub Activity</h2>
         <ContributionGraph username="lolusoleye" />
       </section>
 
       <section className="section philosophy" aria-label="Philosophy">
-        <p>I care about building simple systems that work.</p>
-        <p>Currently focused on fundamentals.</p>
       </section>
 
       <footer className="site-footer-minimal">
