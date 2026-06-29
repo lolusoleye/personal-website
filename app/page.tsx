@@ -1,48 +1,67 @@
-import Header from './components/Header'
-import Footer from './components/Footer'
-import ProjectsGrid from './components/ProjectsGrid'
+import ContributionGraph from './components/ContributionGraph'
 
-export default function Home() {
+const GITHUB = 'https://github.com/lolusoleye'
+const LINKEDIN = 'https://www.linkedin.com/in/iresoleye'
+const EMAIL = 'mailto:ire@iresoleye.me'
+const LEARNING_REPO = 'https://github.com/lolusoleye/learning-repository'
+
+function InlineLinks() {
   return (
     <>
-      <Header />
-      <main id="home">
-        <section className="hero">
-          <div className="container">
-            <h1 className="hero-title">Hi, I&apos;m Ire Soleye</h1>
-            <p className="hero-subtitle">Computer Science student — building, learning, and sharing my projects.</p>
-            <div className="hero-cta">
-              <a className="btn" href="#about">About me</a>
-              <a className="btn primary" href="#projects">View Projects</a>
-              <a className="btn" href="/blog">Blog</a>
-            </div>
-          </div>
-        </section>
-
-        <section id="about" className="section">
-          <div className="container">
-            <h2>About</h2>
-            <p>
-              I&apos;m a computer science student with interests in algorithms, web development, and
-              practical software engineering. I enjoy turning ideas into usable products and learning
-              by building in public.
-            </p>
-            <p>
-              Lately, I&apos;ve been focusing on creating clean, accessible user experiences and exploring
-              systems fundamentals that make software reliable at scale.
-            </p>
-          </div>
-        </section>
-
-        <section id="projects" className="section alt">
-          <div className="container">
-            <h2>Projects</h2>
-            <ProjectsGrid />
-          </div>
-        </section>
-      </main>
-      <Footer />
+      <a href={GITHUB}>GitHub</a>
+      <span className="sep" aria-hidden="true">
+        {' '}
+        ·{' '}
+      </span>
+      <a href={LINKEDIN}>LinkedIn</a>
+      <span className="sep" aria-hidden="true">
+        {' '}
+        ·{' '}
+      </span>
+      <a href={EMAIL}>Email</a>
     </>
   )
 }
 
+export default function Home() {
+  return (
+    <main className="page">
+      <header className="hero">
+        <h1>Ire Soleye</h1>
+        <p className="lead">CS @ Warwick. Building software.</p>
+        <p className="links">
+          <InlineLinks />
+        </p>
+      </header>
+
+      <section className="section" aria-labelledby="work-heading">
+        <h2 id="work-heading">Work</h2>
+        <article className="work-item">
+          <h3>Learning Repository</h3>
+          <p>
+            A collection of small systems built while learning computer science
+            fundamentals.
+          </p>
+          <p>
+            <a href={LEARNING_REPO}>GitHub repository</a>
+          </p>
+          <p className="muted small">continuously updated</p>
+        </article>
+      </section>
+
+      <section className="section" aria-labelledby="activity-heading">
+        <h2 id="activity-heading">Activity</h2>
+        <ContributionGraph username="lolusoleye" />
+      </section>
+
+      <section className="section philosophy" aria-label="Philosophy">
+        <p>I care about building simple systems that work.</p>
+        <p>Currently focused on fundamentals.</p>
+      </section>
+
+      <footer className="site-footer-minimal">
+        <InlineLinks />
+      </footer>
+    </main>
+  )
+}

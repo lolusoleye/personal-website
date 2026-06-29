@@ -1,31 +1,33 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
 import { Providers } from './providers'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
   title: 'Ire Soleye',
-  description: 'Personal website of Ire Soleye — Computer Science student. About and Projects.',
-  keywords: ['Ire Soleye', 'computer science', 'student', 'software developer', 'projects'],
+  description: 'CS @ Warwick. Building software.',
   authors: [{ name: 'Ire Soleye' }],
   openGraph: {
     type: 'website',
     url: 'https://iresoleye.me/',
     title: 'Ire Soleye',
-    description: 'Personal website of Ire Soleye — Computer Science student. About and Projects.',
+    description: 'CS @ Warwick. Building software.',
     siteName: 'Ire Soleye',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Ire Soleye',
-    description: 'Personal website of Ire Soleye — Computer Science student. About and Projects.',
+    description: 'CS @ Warwick. Building software.',
   },
-  themeColor: '#0f172a',
   alternates: {
     canonical: 'https://iresoleye.me/',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
 }
 
 export default function RootLayout({
@@ -35,10 +37,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>
   )
 }
-
