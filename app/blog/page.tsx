@@ -16,42 +16,23 @@ export default async function BlogPage() {
   return (
     <>
       <Header />
-      <main className="section">
+      <main className="py-16">
         <div className="container">
-          <h1>Blog</h1>
+          <h1 className="text-2xl font-normal mb-6">Notes</h1>
           {error ? (
-            <p className="muted">Unable to load posts right now. Please try again later.</p>
+            <p className="text-[var(--muted)]">Unable to load notes.</p>
           ) : !posts || posts.length === 0 ? (
-            <p className="muted">No posts yet. Check back soon!</p>
+            <p className="text-[var(--muted)]">No notes yet.</p>
           ) : (
-            <div className="projects-grid" style={{ marginTop: '2rem' }}>
+            <ul className="space-y-1">
               {posts.map((post: any) => (
-                <article key={post.id} className="card">
-                  <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-                    <h3 className="card-title">{post.title}</h3>
-                    <p className="card-body">
-                      {post.content.length > 150 
-                        ? post.content.substring(0, 150) + '...' 
-                        : post.content}
-                    </p>
-                    <div className="meta">
-                      <span className="badge">
-                        {new Date(post.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </span>
-                      {post.attachments && post.attachments.length > 0 && (
-                        <span className="badge">{post.attachments.length} attachment{post.attachments.length !== 1 ? 's' : ''}</span>
-                      )}
-                    </div>
+                <li key={post.id}>
+                  <Link href={`/blog/${post.slug}`} className="text-[var(--text)] hover:text-[var(--accent)]">
+                    {post.title}
                   </Link>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
       </main>

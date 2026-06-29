@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react'
 
 interface Repo {
   name: string
-  description: string | null
   html_url: string
-  homepage: string | null
-  language: string | null
-  stargazers_count: number
   updated_at: string
   fork: boolean
   archived: boolean
@@ -54,37 +50,22 @@ export default function ProjectsGrid() {
   }, [])
 
   if (loading) {
-    return <p className="muted">Loading projects...</p>
+    return <p className="text-[var(--muted)]">Loading...</p>
   }
 
   if (!repos || repos.length === 0) {
-    return <p className="muted">No repositories to show yet.</p>
+    return null
   }
 
   return (
-    <div className="projects-grid">
+    <ul className="space-y-2">
       {repos.map((repo) => (
-        <article key={repo.html_url} className="card">
-          <h3 className="card-title">{repo.name}</h3>
-          <p className="card-body">{repo.description || 'No description provided.'}</p>
-          <div className="meta">
-            {repo.language && <span className="badge">{repo.language}</span>}
-            <span className="badge">★ {repo.stargazers_count || 0}</span>
-            <span className="badge">Updated {new Date(repo.updated_at).toLocaleDateString()}</span>
-          </div>
-          <div className="card-actions">
-            <a className="link" href={repo.html_url} target="_blank" rel="noopener noreferrer">
-              Repository
-            </a>
-            {repo.homepage && (
-              <a className="link" href={repo.homepage} target="_blank" rel="noopener noreferrer">
-                Demo
-              </a>
-            )}
-          </div>
-        </article>
+        <li key={repo.html_url}>
+          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-[var(--text)] hover:text-[var(--accent)] text-sm">
+            {repo.name}
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }
-
