@@ -84,8 +84,14 @@ p {
 	margin-bottom: 0.75rem;
 }
 
-.links {
-	font-size: 0.9375rem;
+.links a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+}
+
+.links a:hover {
+  opacity: 0.8;
 }
 
 .sep {

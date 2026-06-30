@@ -37,7 +37,7 @@ export default function Home() {
       <section className="section" aria-labelledby="work-heading">
         <article className="work-item">
           <p>
-            <a href={LEARNING_REPO}>view my learning repository featuring a collection of mini projects I’ve built.</a>
+            <a href={LEARNING_REPO}>view my learning repository featuring a collection of mini projects I've built.</a>
           </p>
         </article>
       </section>
@@ -49,10 +49,6 @@ export default function Home() {
 
       <section className="section philosophy" aria-label="Philosophy">
       </section>
-
-      <footer className="site-footer-minimal">
-        <InlineLinks />
-      </footer>
     </main>
   )
 }
